@@ -28,6 +28,41 @@ while ($row = mysqli_fetch_assoc($result)) {
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../assets/css/style.css" />
     <link rel="stylesheet" href="../../assets/css/produk.css" />
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .profile-edit-btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .profile-edit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
@@ -59,6 +94,42 @@ while ($row = mysqli_fetch_assoc($result)) {
                     </ul>
                 </div>
             </div>
+
+            <?php if (isset($_GET['success'])): ?>
+                <div class="alert alert-success">
+                    <?php
+                    switch ($_GET['success']) {
+                        case 'edit':
+                            echo "Akun berhasil diedit!";
+                            break;
+                        case 'hapus':
+                            echo "Akun berhasil dihapus!";
+                            break;
+                        default:
+                            echo "Operasi berhasil!";
+                    }
+                    ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_GET['error'])): ?>
+                <div class="alert alert-danger">
+                    <?php
+                    switch ($_GET['error']) {
+                        case 'cannot_delete':
+                            echo "Tidak dapat menghapus akun admin atau akun Anda sendiri!";
+                            break;
+                        default:
+                            echo "Terjadi kesalahan. Silakan coba lagi.";
+                    }
+                    ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Tombol Edit Profil Admin -->
+            <a href="edit_akun.php?id=<?= $_SESSION['user']['id'] ?>" class="profile-edit-btn">
+                <i class='bx bx-user'></i> Edit Profil Saya
+            </a>
 
             <div class="table-container">
                 <table class="styled-table">
@@ -106,12 +177,10 @@ while ($row = mysqli_fetch_assoc($result)) {
                                     <td><?= htmlspecialchars($alamatPendek) ?></td>
                                     <td><?= date('d-m-Y H:i', strtotime($user['created_at'])) ?></td>
                                     <td class="action-column">
-                                        <?php if (!$isAdmin): ?>
-                                            <a href="edit_akun.php?id=<?= $user['id'] ?>" class="btn-edit">Edit</a>
-                                            <a href="proses_user.php?action=hapus&id=<?= $user['id'] ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus akun ini?');">Hapus</a>
-                                        <?php elseif ($isAdmin && !$isSelf): ?>
-                                            <a href="edit_akun.php?id=<?= $user['id'] ?>" class="btn-edit">Edit</a>
-                                            <span style="color: gray; font-size: 0.9em;">Tidak bisa hapus admin</span>
+                                        <a href="edit_akun.php?id=<?= $user['id'] ?>" class="btn-edit">Edit</a>
+
+                                        <?php if (!$isAdmin && !$isSelf): ?>
+                                            <a href="proses_akun.php?action=hapus&id=<?= $user['id'] ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus akun ini?');">Hapus</a>
                                         <?php else: ?>
                                             <span style="color: gray; font-size: 0.9em;">-</span>
                                         <?php endif; ?>
