@@ -1,0 +1,200 @@
+.form-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+}
+
+.judul {
+    color: #3C91E6;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-1 {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #3C91E6;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.form-group-1 label {
+    margin-bottom: 0.5rem;
+    color: #3C91E6;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.form-group-1 input[type="text"],
+.form-group-1 input[type="number"],
+.form-group-1 input[type="file"],
+.form-group-1 textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.variant-title {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #3C91E6;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.variant-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    background-color: #f3f3f3;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.variant-item input[type="text"],
+.variant-item input[type="number"],
+.variant-item input[type="file"] {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+}
+
+.remove-variant,
+.submit-btn {
+    background-color: #3C91E6;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.add-variant {
+    background-color: #009879;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+.remove-variant {
+    background-color: #d9534f;
+}
+
+.remove-variant:hover {
+    background-color: #c9302c;
+}
+
+.add-variant {
+    margin-top: 10px;
+}
+
+.submit-btn {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #3C91E6;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.back-btn i {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.custom-file-upload {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-upload-variant {
+    display: block;
+    width: 90%;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: #f0f0f0;
+}
+
+.custom-file-upload-variant:hover {
+    background-color: #f0f0f0;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.variant-image-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+.image-preview-wrapper img.preview-img {
+    max-height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    object-fit: cover;
+}

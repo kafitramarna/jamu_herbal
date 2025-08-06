@@ -1,0 +1,98 @@
+/* Navbar normal (awal) */
+#mainNavbar {
+    position: relative;
+    width: 100%;
+    transition: all 0.4s ease;
+    background-color: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
+}
+
+/* Navbar fixed setelah scroll (efek muncul + blur) */
+#mainNavbar.scrolled {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Semi transparan */
+    backdrop-filter: blur(12px);
+    /* Blur aktif pas scroll */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: fadeInDown 0.4s ease forwards;
+}
+
+/* Animasi smooth muncul */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#mainNavbar .navbar-nav .nav-link {
+    color: #0F55B2;
+    font-weight: 500;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    border-bottom: 3px solid transparent;
+    /* garis bawah transparan default */
+}
+
+#mainNavbar .navbar-nav .nav-link:hover {
+    color: #084298;
+    font-weight: 600;
+    transform: scale(1.05);
+}
+
+#mainNavbar .navbar-nav .nav-link.active {
+    border-bottom: 3px solid #0F55B2;
+    padding-bottom: 5px;
+    font-weight: 600;
+}
+
+/* Navbar brand logo */
+#mainNavbar .navbar-brand img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Navbar background color and shadow */
+#mainNavbar.navbar-light {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar toggler button color */
+.navbar-toggler-icon {
+    background-color: #0F55B2;
+}
+
+.fixed-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.3s ease-in-out;
+}
+
+/* Efek Hover pada tombol login */
+#mainNavbar .btn.btn-primary:hover {
+    background-color: #084298;
+    border-color: #084298;
+    color: white;
+}
+
+#mainNavbar .btn.btn-primary {
+    background-color: #0F55B2;
+    /* Background default SEBELUM hover */
+    border-color: #0F55B2;
+    color: white;
+}

@@ -1,0 +1,49 @@
+body {
+    background: #f0f4f8;
+}
+
+.login-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.login-header {
+    background: #0F55B2;
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.login-header h4 {
+    margin-bottom: 0.5rem;
+}
+
+.login-form {
+    padding: 2rem;
+    background-color: #ffffff;
+}
+
+.login-form input:focus {
+    border-color: #0F55B2;
+    box-shadow: 0 0 0 0.2rem rgba(15, 85, 178, 0.25);
+}
+
+.login-footer {
+    background: #f7f9fb;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.btn-primary {
+    background-color: #0F55B2;
+    border-color: #0F55B2;
+}
+
+.btn-primary:hover {
+    background-color: #0c4492;
+    border-color: #0c4492;
+}

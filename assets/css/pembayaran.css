@@ -1,0 +1,55 @@
+.product-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.section-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #0F55B2;
+}
+
+.card {
+    border-radius: 12px;
+    border: 1px solid #e1e7ef;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.btn-checkout {
+    background-color: #0F55B2;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-checkout:hover {
+    background-color: #0c448f;
+    color: #fff;
+}
+
+.form-check-input:checked {
+    background-color: #0F55B2;
+    border-color: #0F55B2;
+}
+
+.form-check-label {
+    color: #333;
+    font-weight: 500;
+}
+
+a.text-decoration-none {
+    color: #0F55B2;
+}
+
+a.text-decoration-none:hover {
+    text-decoration: underline;
+    color: #0c448f;
+}
+
+h4 {
+    color: #0F55B2;
+    font-weight: 700;
+}

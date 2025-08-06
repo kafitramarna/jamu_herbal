@@ -1,0 +1,23 @@
+body {
+    background-color: #f4f6f9;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.profile-card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
+}
+
+label {
+    font-weight: 600;
+}
+
+textarea, input[type="text"], input[type="email"] {
+    border-radius: 0.5rem;
+}
+
+.btn-primary, .btn-danger {
+    border-radius: 0.5rem;
+}
