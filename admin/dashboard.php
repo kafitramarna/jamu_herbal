@@ -346,7 +346,7 @@ while ($row = mysqli_fetch_assoc($recentOrdersResult)) {
             <label for="switch-mode" class="switch-mode"></label>
         </nav>
 
-        <main>
+        <main id="main">
             <div class="head-title">
                 <div class="left">
                     <h1>Dashboard</h1>
@@ -478,9 +478,14 @@ while ($row = mysqli_fetch_assoc($recentOrdersResult)) {
             </div>
 
             <!-- Back to top button -->
-            <div class="back-to-top" onclick="scrollToTop()">
+            <a class="back-to-top" href="/admin/dashboard.php">
                 <i class='bx bx-up-arrow-alt'></i>
-            </div>
+            </a>
+            <!-- <button class="back-to-top" onclick="scrollToTop()"> -->
+
+            <!-- <i class='bx bx-up-arrow-alt'></i> -->
+
+            <!-- </button> -->
         </main>
     </section>
 
