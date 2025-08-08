@@ -151,14 +151,16 @@ if ($result && $result->num_rows > 0) {
                             </select>
                         </div>
 
+                        <div class="mb-3">
+                            <label>Kode Pos</label>
+                            <select id="postal_code" name="postal_code" class="form-select" required data-selected="<?= htmlspecialchars($user['postal_code'] ?? '') ?>">
+                                <option value="">-- Pilih Kode Pos --</option>
+                            </select>
+                        </div>
+
                         <input type="hidden" name="province_name" id="province_name" value="<?= htmlspecialchars($user['province_name'] ?? '') ?>" />
                         <input type="hidden" name="city_name" id="city_name" value="<?= htmlspecialchars($user['city_name'] ?? '') ?>" />
                         <input type="hidden" name="district_name" id="district_name" value="<?= htmlspecialchars($user['district_name'] ?? '') ?>" />
-
-                        <div class="mb-3">
-                            <label>Kode Pos</label>
-                            <input type="text" name="postal_code" class="form-control" value="<?= htmlspecialchars($user['postal_code'] ?? '') ?>" required />
-                        </div>
 
                         <div class="mb-3">
                             <label>Alamat Lengkap</label>
@@ -192,6 +194,7 @@ if ($result && $result->num_rows > 0) {
             const provinceSelect = document.getElementById('province');
             const citySelect = document.getElementById('city');
             const districtSelect = document.getElementById('district');
+            const postalCodeSelect = document.getElementById('postal_code');
 
             function loadProvinces(selectedProvinceId = null) {
                 fetch('../php/api_ongkir.php')
@@ -261,9 +264,53 @@ if ($result && $result->num_rows > 0) {
                     .catch(err => console.error("Gagal load kecamatan:", err));
             }
 
+            function loadPostalCodes(districtId, selectedPostalCode = null) {
+                if (!districtId) {
+                    postalCodeSelect.innerHTML = '<option value="">-- Pilih Kode Pos --</option>';
+                    return;
+                }
+                fetch(`../php/get_subdistrict.php?district=${districtId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log("Data Kode Pos:", data);
+                        const subdistricts = data || [];
+                        postalCodeSelect.innerHTML = '<option value="">-- Pilih Kode Pos --</option>';
+
+                        // Create a set to store unique postal codes with their names
+                        const uniquePostalCodes = new Map();
+
+                        subdistricts.forEach(sd => {
+                            // Use zip_code as the key and store the subdistrict name
+                            uniquePostalCodes.set(sd.zip_code, sd.name);
+                        });
+
+                        // Convert the map to an array of objects for easier sorting
+                        const postalCodesArray = Array.from(uniquePostalCodes).map(([code, name]) => ({
+                            code,
+                            name
+                        }));
+
+                        // Sort by postal code
+                        postalCodesArray.sort((a, b) => a.code.localeCompare(b.code));
+
+                        // Add options to the select
+                        postalCodesArray.forEach(pc => {
+                            const option = document.createElement('option');
+                            option.value = pc.code;
+                            option.textContent = `${pc.code} - ${pc.name}`;
+                            if (selectedPostalCode && selectedPostalCode === pc.code) {
+                                option.selected = true;
+                            }
+                            postalCodeSelect.appendChild(option);
+                        });
+                    })
+                    .catch(err => console.error("Gagal load kode pos:", err));
+            }
+
             const selectedProvince = provinceSelect.dataset.selected;
             const selectedCity = citySelect.dataset.selected;
             const selectedDistrict = districtSelect.dataset.selected;
+            const selectedPostalCode = postalCodeSelect.dataset.selected;
 
             loadProvinces(selectedProvince);
 
@@ -273,20 +320,32 @@ if ($result && $result->num_rows > 0) {
             if (selectedCity) {
                 loadDistricts(selectedCity, selectedDistrict);
             }
+            if (selectedDistrict) {
+                loadPostalCodes(selectedDistrict, selectedPostalCode);
+            }
 
             provinceSelect.addEventListener('change', () => {
                 loadCities(provinceSelect.value);
                 const selectedOption = provinceSelect.options[provinceSelect.selectedIndex];
                 document.getElementById('province_name').value = selectedOption.textContent || '';
+
+                // Reset dependent fields
+                districtSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+                postalCodeSelect.innerHTML = '<option value="">-- Pilih Kode Pos --</option>';
+                document.getElementById('district_name').value = '';
             });
 
             citySelect.addEventListener('change', () => {
                 loadDistricts(citySelect.value);
                 const selectedOption = citySelect.options[citySelect.selectedIndex];
                 document.getElementById('city_name').value = selectedOption.textContent || '';
+
+                // Reset dependent fields
+                postalCodeSelect.innerHTML = '<option value="">-- Pilih Kode Pos --</option>';
             });
 
             districtSelect.addEventListener('change', () => {
+                loadPostalCodes(districtSelect.value);
                 const selectedOption = districtSelect.options[districtSelect.selectedIndex];
                 document.getElementById('district_name').value = selectedOption.textContent || '';
             });
