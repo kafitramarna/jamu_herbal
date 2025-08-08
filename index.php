@@ -2,6 +2,17 @@
 
 require "php/config.php";
 
+
+// if (isset($_ENV['RAJA_ONGKIR_API_KEY'])) {
+//     echo "Database User: " . $_ENV['RAJA_ONGKIR_API_KEY'];
+// } else {
+//     echo "DB_USER environment variable not set.";
+// }
+
+// $databaseHost = getenv('DB_HOST');
+// echo "Database Host: " . $databaseHost;
+
+
 // Ambil data banner
 $banners = [];
 $sql = "SELECT * FROM content_images WHERE type = 'banner' ORDER BY created_at DESC";

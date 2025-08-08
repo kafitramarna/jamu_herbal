@@ -76,6 +76,50 @@ $csrf_token = $_SESSION['csrf_token'];
     <link rel="stylesheet" href="../assets/css/pembayaran.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .shipping-logo {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            vertical-align: text-bottom;
+        }
+
+        .loading-spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .loading-spinner .spinner-border {
+            margin-right: 10px;
+        }
+
+        optgroup {
+            font-weight: bold;
+            color: #333;
+        }
+
+        #layanan option {
+            padding: 5px 0;
+        }
+
+        /* Style untuk dropdown layanan pengiriman */
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .service-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-details {
+            color: #6c757d;
+            font-size: 0.85em;
+        }
+    </style>
 </head>
 
 <body>
@@ -129,22 +173,13 @@ $csrf_token = $_SESSION['csrf_token'];
         <?php if (!empty($items)): ?>
             <div class="card p-4 shadow-sm mb-4">
                 <div class="mb-3">
-                    <label for="kurir" class="section-title">Kurir</label>
-                    <select id="kurir" class="form-select" required>
-                        <option value="">-- Pilih Kurir --</option>
-                        <option value="jne">JNE</option>
-                        <option value="jnt">J&T</option>
-                        <option value="pos">POS Indonesia</option>
-                    </select>
-                    <div id="loading-ongkir" class="form-text text-primary mt-1" style="display: none;">
-                        <div class="spinner-border spinner-border-sm me-2" role="status"></div> Mengambil data ongkir...
-                    </div>
-                </div>
-
-                <div class="mb-3">
                     <label for="layanan" class="section-title">Layanan Pengiriman</label>
-                    <select id="layanan" class="form-select" required>
-                        <option value="">-- Pilih Layanan --</option>
+                    <div id="shipping-loading" class="loading-spinner">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <span>Mengambil layanan pengiriman yang tersedia...</span>
+                    </div>
+                    <select id="layanan" class="form-select" required style="display: none;">
+                        <option value="">-- Pilih Layanan Pengiriman --</option>
                     </select>
                 </div>
             </div>
@@ -199,52 +234,77 @@ $csrf_token = $_SESSION['csrf_token'];
         const asuransi = <?= (int)$asuransi ?>;
         const biayaLayanan = <?= (int)$biaya_layanan ?>;
 
-        document.getElementById("kurir")?.addEventListener("change", function() {
-            const kurir = this.value;
-            const loading = document.getElementById("loading-ongkir");
+        // Langsung load semua layanan pengiriman saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
             const layananSelect = document.getElementById("layanan");
-            layananSelect.innerHTML = '<option value="">-- Pilih Layanan --</option>';
-            if (!kurir) return;
+            const loadingElement = document.getElementById("shipping-loading");
 
-            loading.style.display = "inline-block";
+            // Daftar semua kurir yang didukung
+            const couriers = 'jne:jnt:pos:sicepat:ninja:sap:ide:lion:rex';
+
+            // Fetch layanan pengiriman
             fetch("../php/cek_ongkir.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
-                    body: `origin=${origin}&destination=${destination}&weight=${weight}&courier=${kurir}`
+                    body: `origin=${origin}&destination=${destination}&weight=${weight}&courier=${couriers}`
                 })
-                .then(async response => {
-                    console.log("Is Response:", response.constructor.name);
-                    const raw = await response.text();
-                    console.log("RAW RESPONSE:", raw);
-
-                    let json;
-                    try {
-                        json = JSON.parse(raw);
-                    } catch (e) {
-                        alert("Response bukan JSON valid!");
-                        return [];
-                    }
-                    return json;
-                })
+                .then(response => response.json())
                 .then(result => {
-                    console.log("Parsed JSON:", result);
-
-                    if (!result || !Array.isArray(result.data)) {
-                        alert("Tidak ada layanan ongkir tersedia / format salah");
+                    if (!result || !Array.isArray(result.data) || result.data.length === 0) {
+                        loadingElement.innerHTML = '<div class="alert alert-warning">Tidak ada layanan pengiriman yang tersedia untuk lokasi Anda.</div>';
                         return;
                     }
 
+                    // Grup layanan berdasarkan kurir
+                    const courierGroups = {};
+
                     result.data.forEach(service => {
-                        const cost = service.cost;
-                        const etd = service.etd;
-                        const option = `<option value="${cost}">${service.service} - Rp${cost.toLocaleString('id-ID')} (ETD: ${etd} hari)</option>`;
-                        layananSelect.innerHTML += option;
+                        const courierName = service.name;
+                        if (!courierGroups[courierName]) {
+                            courierGroups[courierName] = [];
+                        }
+                        courierGroups[courierName].push(service);
+                    });
+
+                    // Sembunyikan loading, tampilkan dropdown
+                    loadingElement.style.display = 'none';
+                    layananSelect.style.display = 'block';
+
+                    // Urutkan kurir berdasarkan nama
+                    const sortedCouriers = Object.keys(courierGroups).sort();
+
+                    // Populasi dropdown dengan optgroup untuk setiap kurir
+                    sortedCouriers.forEach(courierName => {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = courierName;
+
+                        // Urutkan layanan berdasarkan harga (termurah dulu)
+                        const sortedServices = courierGroups[courierName].sort((a, b) => a.cost - b.cost);
+
+                        sortedServices.forEach(service => {
+                            const option = document.createElement('option');
+                            option.value = service.cost;
+
+                            // Format estimasi pengiriman
+                            let etdText = service.etd ? `(${service.etd} hari)` : '';
+
+                            option.textContent = `${service.service} - Rp${service.cost.toLocaleString('id-ID')} ${etdText}`;
+                            option.dataset.description = service.description || '';
+                            option.dataset.courier = service.code;
+                            option.dataset.service = service.service;
+
+                            optgroup.appendChild(option);
+                        });
+
+                        layananSelect.appendChild(optgroup);
                     });
                 })
-                .catch(err => alert("Gagal ambil data ongkir: " + err))
-                .finally(() => loading.style.display = "none");
+                .catch(err => {
+                    console.error("Error loading shipping options:", err);
+                    loadingElement.innerHTML = '<div class="alert alert-danger">Gagal memuat layanan pengiriman. Silakan muat ulang halaman.</div>';
+                });
         });
 
         document.getElementById("layanan")?.addEventListener("change", function() {
@@ -334,8 +394,31 @@ $csrf_token = $_SESSION['csrf_token'];
                         }
                     });
                 },
-                onPending: function() {
-                    alert("Transaksi pending! Selesaikan pembayaran.");
+                onPending: function(result) {
+                    fetch("../php/proses_pembayaran.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            order_id: orderId,
+                            payment_type: result.payment_type,
+                            transaction_time: result.transaction_time,
+                            transaction_status: "pending",
+                            gross_amount: result.gross_amount,
+                            user_id: <?= (int)$user_id ?>,
+                            cart_id: <?= (int)$cart_id ?>,
+                            ongkir: ongkir,
+                            csrf_token: <?= json_encode($csrf_token) ?>
+                        })
+                    }).then(res => res.json()).then(res => {
+                        if (res.success) {
+                            alert("Transaksi pending! Selesaikan pembayaran Anda.");
+                            window.location.href = "user-produk.php";
+                        } else {
+                            alert("Gagal simpan transaksi!");
+                        }
+                    });
                 },
                 onError: function() {
                     alert("Terjadi error saat pembayaran!");

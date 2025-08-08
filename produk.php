@@ -93,7 +93,7 @@ function getTotalStock($conn, $product_id)
                             <?php endif; ?>
                         </div>
                         <div class="card-footer text-center bg-light">
-                            <a href="detail.php?id=<?= $product['id']; ?>" class="btn btn-primary w-100">Lihat Detail</a>
+                            <a href="/user/detail-produk.php?id=<?= $product['id']; ?>" class="btn btn-primary w-100">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
