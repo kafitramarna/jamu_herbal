@@ -153,7 +153,7 @@ $isSelf = ($_SESSION['user']['id'] == $userId);
                             <input type="hidden" name="role" value="<?= htmlspecialchars($user['role']) ?>">
                         <?php else: ?>
                             <select name="role">
-                                <option value="customer" <?= $user['role'] === 'customer' ? 'selected' : '' ?>>Customer</option>
+                                <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User</option>
                                 <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
                             </select>
                         <?php endif; ?>
