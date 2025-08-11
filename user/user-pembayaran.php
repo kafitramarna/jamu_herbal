@@ -227,7 +227,7 @@ $csrf_token = $_SESSION['csrf_token'];
     <?php include '../components/footer.php'; ?>
     <script src="../assets/js/navbar.js"></script>
     <script>
-        const origin = 151; // ID kecamatan asal
+        const origin = 1324; // ID kecamatan asal
         const destination = <?= (int)$user['district_id'] ?>;
         const weight = <?= (int)$total_berat ?>;
         const totalHarga = <?= (int)$total_harga ?>;
